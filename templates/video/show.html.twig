@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ video.title }}</h1>
+    <h3>{{ video.description }}</h3>
+    <h5>{{ video.uploadDateTime|date('d-m-Y H:i:s') }}</h5>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <video controls id="video"></video>
+    <script>
+        if(Hls.isSupported()) {
+            var video = document.getElementById('video');
+            var hls = new Hls();
+            hls.loadSource('{{ asset('uploads/videos/' ~ video.videoId ~ '/stream.m3u8') }}');
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                video.play();
+            });
+        }
+    </script>
+
+{% endblock %}
